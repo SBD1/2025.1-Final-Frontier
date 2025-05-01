@@ -1,3 +1,36 @@
+# Modelo Entidade-Relacionamento (MER)
+
+### 1. Entidades
+
+- Mercado
+- Motor
+- Equipamento
+- Nave
+- Piloto
+- Minério
+- Setor
+- Hangar
+
+### 2. Atributos
+
+**Mercado**: <ins>nome</ins>, capacidade  
+**Motor**: <ins>nome</ins>, potência, energia, velocidade  
+**Equipamento**: <ins>nome</ins>, consumo, ataque, defesa, extração, reparo, habilidades  
+**Nave**: <ins>ID</ins>, nome, tipo, limite, carga  
+**Piloto**: <ins>ID</ins>, email, senha  
+**Minério**: <ins>ID</ins>, nome, peso, valor  
+**Setor**: <ins>ID</ins>, nome, tipo  
+**Hangar**: <ins>nome</ins>, capacidade
+
+### 3. Relacionamentos
+
+**Mercado anuncia** (1,n)  
+- Naves, motores, equipamentos
+
+**Mercado vende** (1,n)  
+- Naves (preço_nave)  
+- Motores (preço_motor)  
+- Equipamentos (preço_equipamento)
 
 **Hangar abriga Nave**  
 - Um Hangar abriga uma ou mais Naves (1,n)  
@@ -36,3 +69,4 @@
 | Data       | Versão | Autor       | Alterações                        |
 |------------|--------|-------------|-----------------------------------|
 | 01/05/2025 | 1.0    | [Matheus Barros](https://github.com/Ninja-Haiyai) | Criação do documento MER e adição da primeira versão|
+
