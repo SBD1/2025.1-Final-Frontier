@@ -21,3 +21,9 @@ Este projeto tem como objetivo o desenvolvimento de um jogo web voltado à maté
 - [MER](Entrega%201/MER.md)
 - [Modelo Relacional](Entrega%201/ModeloRelacional.png)
 - [Dicionário de Dados](Entrega%201/Dicionário.md)
+
+## 🎥 Vídeos de Apresentação
+
+| Módulo | Link da Gravação           | Data       |
+|--------|-----------------------------|------------|
+| 1      | [Apresentação Módulo 1](Entrega 1/Video_Entrega_1.mp4)  | 02/05/2025 |
