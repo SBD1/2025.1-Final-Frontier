@@ -5,8 +5,8 @@ Armazena as informações referentes a nave do usuário.
 |--------------|----------------------------------------------|--------------|---------|--------------------------------------------------------|
 | `idNave`     | Identificador único da nave                  | `SERIAL`     | -       | PK, Not Null                                           |
 | `nome`       | Nome da nave                                 | `VARCHAR`    | 50      |  Not Null                                              |
-| `vidaMax`    | O limite de vida da nave                     | `INTEGER`    | -       | Not Null, Default = 50                                 |
-| `vidaAtual`  | A vida atual da nave                         | `INTEGER`    | -       | Not Null, Default = 50, Check (`vidaAtual <= vidaMax`) |
+| `vidaMax`    | O limite de vida da nave                     | `INTEGER`    | -       | Not Null,                                              |
+| `vidaAtual`  | A vida atual da nave                         | `INTEGER`    | -       | Not Null,                                              |
 | `tipo`       | Tipo de nave o piloto está pilotando         | `INTEGER`    | -       | Not Null, Default = 1                                  |
 | `limite`     | Quantas modificações o piloto pode fazer     | `INTEGER`    | -       | Not Null                                               |
 | `carga`      | Quanto de peso a nave consegue levar         | `INTEGER`    | -       | Not Null                                               |
