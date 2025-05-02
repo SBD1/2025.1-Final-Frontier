@@ -5,8 +5,8 @@ Armazena as informações referentes a nave do usuário.
 |--------------|----------------------------------------------|--------------|---------|--------------------------------------------------------|
 | `idNave`     | Identificador único da nave                  | `SERIAL`     | -       | PK, Not Null                                           |
 | `nome`       | Nome da nave                                 | `VARCHAR`    | 50      |  Not Null                                              |
-| `vidaMax`    | O limite de vida da nave                     | `INTEGER`    | -       | Not Null, Default = 50                                 |
-| `vidaAtual`  | A vida atual da nave                         | `INTEGER`    | -       | Not Null, Default = 50, Check (`vidaAtual <= vidaMax`) |
+| `vidaMax`    | O limite de vida da nave                     | `INTEGER`    | -       | Not Null,                                              |
+| `vidaAtual`  | A vida atual da nave                         | `INTEGER`    | -       | Not Null,                                              |
 | `tipo`       | Tipo de nave o piloto está pilotando         | `INTEGER`    | -       | Not Null, Default = 1                                  |
 | `limite`     | Quantas modificações o piloto pode fazer     | `INTEGER`    | -       | Not Null                                               |
 | `carga`      | Quanto de peso a nave consegue levar         | `INTEGER`    | -       | Not Null                                               |
@@ -82,10 +82,30 @@ Armazena informações sobre quanto cada item está sendo vendido.
 | `nome`         | Nome único do mercado                     | `VARCHAR`    | 30      | PK, Not Null           |
 | `capacidade`   | Capacidade de guardar                     | `INTEGER`    | -       | Not Null               |
 
-## **Tabela: `Setor`**
-Armazena informações de quais locais da galáxia o piloto pode ir.
+## **Tabela: `Mercado e Nave`**
+Armazena informações de quais naves o mercado vende.
+| Nome             | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------  |-------------------------------------------|--------------|---------|------------------------|
+| `idMercado_Nave` | Identificador único da instância          | `SERIAL`     |-        | PK, Not Null           |
+| `id_nave`        | Identificador único da nave               | `SERIAL`     |-        | FK, Not Null           |
+| `nome_mercado`   | Nome do mercado                           | `VARCHAR`    | 30      | FK, Not Null           |
+| `preco`          | Valor da nave                             | `INTEGER`    | -       | Not Null               |
+
+## **Tabela: `Mercado e Equipamento`**
+Armazena informações de quais equipamentos o mercado vende.
+| Nome              | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|-------------------|-------------------------------------------|--------------|---------|------------------------|
+| `idSetor`         | Identificador único da instância          | `SERIAL`     | -       | PK, Not Null           |
+| `nome_equipamento`| Nome do equipamento                       | `VARCHAR`    | 30      | FK, Not Null           |
+| `nome_mercado`    | Nome do mercado                           | `VARCHAR`    | 30      | FK, Not Null           |
+| `preco`           | Valor do equipamento                      | `INTEGER`    | -       | Not Null               |
+
+## **Tabela: `Mercado e Motor`**
+Armazena informações de quais motores o mercado vende.
 | Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
 |----------------|-------------------------------------------|--------------|---------|------------------------|
 | `idSetor`      | Identificador único da instância          | `SERIAL`     | -       | PK, Not Null           |
-| `nome`         | Nome da cardinalidade                     | `VARCHAR`    | 10      | Not Null               |
-| `tipo`         | Local possui que tipo de serviço          | `VARCHAR`    | 30      | Not Null               |
+| `nome_motor`   | Nome do motor                             | `VARCHAR`    | 30      | Not Null               |
+| `nome_mercado` | Nome do mercado                           | `VARCHAR`    | 30      | Not Null               |
+| `preco`        | Valor do equipamento                      | `INTEGER`    | -       | Not Null               |
+
