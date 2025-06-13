@@ -81,19 +81,18 @@ INSERT INTO nave_motor (nome_motor, id_nave, nave_atual) VALUES
 
 
 INSERT INTO mercado_nave (id_nave, nome_mercado, nome_nave, descricao_nave, preco) VALUES
-(1, 'Mercado Central', 'Falcon X', 'Nave de transporte leve', 100000),
-
+(1, 'Mercado Central', 'DSTRYR', 'Nave de combate pesado', 100000);
 
 INSERT INTO mercado_equipamento (nome_equipamento, nome_mercado, descricao_equipamento, preco) VALUES
 ('Laser V2', 'Mercado Central', 'Laser de ataque básico', 5000),
-('Escudo Prismatina', 'Mercado Beta', 'Escudo de defesa básico', 7000);
+('Escudo Prismatina', 'Mercado Pirata de Gortran', 'Escudo de defesa básico', 7000);
 
 
 INSERT INTO mercado_motor (nome_motor, nome_mercado, descricao_motor, preco) VALUES
 ('Propulsor X', 'Mercado Central', 'Motor de de base', 30000),
-('Impulsivo-99', 'Mercado Beta', 'Motor de velocidade média', 15000);
+('Impulsivo-99', 'Mercado Pirata de Gortran', 'Motor de velocidade média', 15000);
 
 
 INSERT INTO Mundo (id_piloto, nome_mercado, id_nave, nome_equipamento, nome_motor, descricao) VALUES
 (1, 'Mercado Central', 1, 'Laser V2', 'Propulsor X', 'Mundo inicial do piloto 1'),
-(2, 'Mercado Beta', 2, 'Escudo Prismatina', 'Impulsivo-99', 'Mundo inicial do piloto 2');
+(2, 'Mercado Pirata de Gortran', 2, 'Escudo Prismatina', 'Impulsivo-99', 'Mundo inicial do piloto 2');

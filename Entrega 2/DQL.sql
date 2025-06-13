@@ -6,24 +6,24 @@ JOIN Setor s ON p.setor = s.id;
 
 -- Consultar todas as naves do hangar de um piloto específico
 SELECT ng.nome, n.id_nave
-FROM Nave ng, nome_hangar n
+FROM Nave ng, naves_hangar n
 JOIN nave_piloto np ON n.id_nave = np.id_nave
 WHERE np.id_piloto = 1;
 
 -- Consultar naves disponíveis no mercado do setor que o piloto está	
 SELECT me.nome_nave, me.descricao_nave, me.preco
-FROM mercado_nave me
-WHERE Piloto.setor=Mercado.id_setor;
+FROM mercado_nave me, Piloto p, MERCADO
+WHERE p.setor=Mercado.id_setor;
 
 -- Consultar equipamentos disponíveis no mercado do setor que o piloto está
 SELECT me.nome_equipamento, me.descricao_equipamento, me.preco
-FROM mercado_equipamento me
-WHERE Piloto.setor=Mercado.id_setor;
+FROM mercado_equipamento me, Piloto p, MERCADO
+WHERE p.setor=Mercado.id_setor;
 
 -- Consultar motores disponíveis no mercado do setor que o piloto está
 SELECT me.nome_motor, me.descricao_motor, me.preco
-FROM mercado_motor me
-WHERE Piloto.setor=Mercado.id_setor;
+FROM mercado_motor me, Piloto p, MERCADO
+WHERE p.setor=Mercado.id_setor;
 
 -- Consultar minérios coletados por um piloto especifico no setor em que está
 SELECT m.nome, m.peso, m.valor
