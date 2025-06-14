@@ -52,3 +52,64 @@ WHERE p.setor = m.id_setor;
 -- Consultar todos os minérios e seus valores
 SELECT nome, valor
 FROM Minerio;
+
+-- Ver setores vizinhos do piloto (setores adjacentes ao atual)
+SELECT s.id, s.nome, s.descricao
+FROM Setor s
+JOIN Piloto p ON p.setor = s.id
+WHERE p.id = 1;
+
+-- Ver motor atual da nave do piloto
+SELECT m.nome, m.descricao, m.velocidade
+FROM Motor m
+JOIN nave_motor nm ON m.nome = nm.nome_motor
+JOIN nave_piloto np ON nm.id_nave = np.id_nave
+WHERE np.id_piloto = 1 AND nm.nave_atual = true;
+
+-- Ver equipamentos atuais da nave do piloto
+SELECT e.nome, e.descricao, e.ataque, e.defesa, e.extracao, e.reparo
+FROM Equipamento e
+JOIN nave_equipamento ne ON e.nome = ne.nome_equipamento
+JOIN nave_piloto np ON ne.id_nave = np.id_nave
+WHERE np.id_piloto = 1 AND ne.nave_atual = true;
+
+-- Ver todas as naves, motores e equipamentos de um mercado específico
+SELECT 'Nave' FROM mercado_nave WHERE nome_mercado = 'Mercado Central'
+UNION ALL
+SELECT 'Motor' FROM mercado_motor WHERE nome_mercado = 'Mercado Central'
+UNION ALL
+SELECT 'Equipamento' FROM mercado_equipamento WHERE nome_mercado = 'Mercado Central';
+
+-- Listar poder de ataque total da nave do piloto
+SELECT SUM(e.ataque) AS ataque_total
+FROM Equipamento e
+JOIN nave_equipamento ne ON e.nome = ne.nome_equipamento
+JOIN nave_piloto np ON ne.id_nave = np.id_nave
+WHERE np.id_piloto = 1 AND ne.nave_atual = true;
+
+-- Listar defesa total da nave
+SELECT SUM(e.defesa) AS defesa_total
+FROM Equipamento e
+JOIN nave_equipamento ne ON e.nome = ne.nome_equipamento
+JOIN nave_piloto np ON ne.id_nave = np.id_nave
+WHERE np.id_piloto = 1 AND ne.nave_atual = true;
+
+-- Ver os minérios disponíveis no setor atual para mineração
+SELECT m.nome, m.descricao, m.peso, m.valor
+FROM Minerio m
+JOIN minerio_setor ms ON m.id = ms.id_minerio
+WHERE ms.id_setor = (SELECT setor FROM Piloto WHERE id = 1);
+
+-- Status geral do piloto (setor atual, nave, motor, equipamentos)
+SELECT 
+    p.email AS piloto,
+    s.nome AS setor_atual,
+    n.nome AS nave,
+    m.nome AS motor
+FROM Piloto p
+JOIN Setor s ON p.setor = s.id
+JOIN nave_piloto np ON p.id = np.id_piloto
+JOIN Nave n ON np.id_nave = n.id
+LEFT JOIN nave_motor nm ON n.id = nm.id_nave AND nm.nave_atual = true
+LEFT JOIN Motor m ON nm.nome_motor = m.nome
+WHERE p.id = 1;
