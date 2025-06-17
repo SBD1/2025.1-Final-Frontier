@@ -26,9 +26,7 @@ Clique na miniatura ou link abaixo para assistir à apresentação completa do g
 </a>
 
 
-<center>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/5GxFpSBqeYE?si=-7T0Z251zKWOr0kx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</center>
+[![Assista ao vídeo](https://img.youtube.com/vi/5GxFpSBqeYE/0.jpg)](https://youtu.be/5GxFpSBqeYE?si=-7T0Z251zKWOr0kx)
 
 ---
 
