@@ -21,8 +21,13 @@ Durante essa entrega, o foco principal foi:
 
 Clique na miniatura ou link abaixo para assistir à apresentação completa do grupo:
 
+<a href="https://youtu.be/5GxFpSBqeYE?si=y3c3hl0uq7cYygjD" target="_blank" rel="noopener">
+  Link para assistir o vídeo
+</a>
+
+
 <center>
-<iframe width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5GxFpSBqeYE?si=-7T0Z251zKWOr0kx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </center>
 
 ---
