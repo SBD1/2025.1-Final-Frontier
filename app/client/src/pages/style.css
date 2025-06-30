@@ -1,0 +1,148 @@
+.container {
+    background-color: black;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.gameContainer {
+    display: flex;
+    background-color: black;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}
+
+.gameColumn{
+    flex: 1;
+}
+
+.terminalColumn{
+    flex: 3;
+    position: relative;
+    height: 95%;
+}
+
+.mainText {
+    color: whitesmoke;
+    font-size: x-small;
+}
+
+.displayText {
+    color: rgb(242, 255, 219);
+    font-size: x-small;
+}
+
+.displayTerminalText {
+    color: rgb(242, 255, 219);
+    font-family: 'Fira Code', monospace;
+    font-size: small;
+}
+
+.terminalContent {
+    bottom: 10;
+    align-self: flex-end;
+    position: absolute;
+    width: 100%;
+    height: 95%;
+    overflow-y: scroll;
+    /* white-space: 'no-wrap'; */
+}
+.terminalInput {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+.displayContent {
+    font-size: 2px;
+    font-family: 'Fira Code', monospace;
+    color: rgb(240, 255, 200); 
+}
+
+
+.mainTitle {
+    animation: color-change 1s step-end infinite;
+    font-size: x-small;
+}
+
+@keyframes color-change {
+    0% {
+        color: white;
+    }
+
+    14.3% {
+        color: rgb(237, 255, 209);
+    }
+
+    28.6% {
+        color: rgb(211, 252, 151);
+    }
+
+    42.9% {
+        color: rgb(191, 255, 95);
+    }
+
+    57.2% {
+        color: rgb(200, 255, 47);
+    }
+
+    71.5% {
+        color: rgb(191, 255, 95);
+    }
+
+    85.8% {
+        color: rgb(211, 252, 151);
+    }
+
+    100% {
+        color: rgb(237, 255, 209);
+    }
+}
+
+.centerTitle{
+    display: grid;
+    justify-content: center;
+    margin-top: 3%;
+}
+
+.loginForm{
+    display: grid;    
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+}
+
+.formRow{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.homeRow{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* Change the scrollbar track (background) */
+  ::-webkit-scrollbar-track {
+    background: gray;
+    border-radius: 10px;
+  }
+  
+  /* Style the scrollbar thumb (the moving part) */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(117, 129, 85); 
+    border-radius: 10px;
+  }
+  
+  /* When hovering over the scrollbar */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(183, 194, 152);  
+  }
