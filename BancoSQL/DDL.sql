@@ -1,10 +1,12 @@
--- Tabela: Piloto
+--Tabela: Piloto
 CREATE TABLE Piloto (
     id SERIAL PRIMARY KEY,
     email TEXT NOT NULL,
     senha TEXT NOT NULL,
-    setor INTEGER
+    setor INTEGER,
+    dinheiro NUMERIC DEFAULT 1000  -- saldo inicial 1000 créditos
 );
+
 
 -- Tabela: Setor
 CREATE TABLE Setor (
@@ -47,7 +49,16 @@ CREATE TABLE Minerio (
 CREATE TABLE minerio_setor (
     UniqueId SERIAL PRIMARY KEY,
     id_minerio INTEGER REFERENCES Minerio(id),
-    id_setor INTEGER REFERENCES Setor(id)
+    id_setor INTEGER REFERENCES Setor(id),
+    quantidade INTEGER NOT NULL DEFAULT 0,
+    CONSTRAINT uq_minerio_setor UNIQUE (id_minerio, id_setor) 
+);
+
+-- Tabela: minerio_nave
+CREATE TABLE minerio_nave (
+    id SERIAL PRIMARY KEY,
+    id_minerio INTEGER REFERENCES Minerio(id),
+    id_nave INTEGER REFERENCES Nave(id)
 );
 
 -- Tabela: Nave
@@ -56,8 +67,8 @@ CREATE TABLE Nave (
     nome TEXT,
     descricao TEXT,
     tipo TEXT,
-    limite NUMERIC,
-    carga NUMERIC
+    limite NUMERIC, -- limite máximo de carga
+    carga NUMERIC -- carga atual
 );
 
 -- Tabela: nave_piloto

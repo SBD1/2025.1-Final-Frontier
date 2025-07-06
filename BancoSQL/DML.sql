@@ -38,15 +38,15 @@ INSERT INTO Minerio (nome, peso, valor, descricao) VALUES
 ('Cronóbio', 7, 300, 'Extramemente raro e poderoso, seu potencial total ainda é um mistério.');
 
 
-INSERT INTO minerio_setor (id_minerio, id_setor) VALUES
-(1, 1),
-(2, 1),
-(3, 3);
+INSERT INTO minerio_setor (id_minerio, id_setor, quantidade) VALUES
+(1, 1, 100000),
+(2, 1, 10000),
+(3, 3, 1000);
 
 
 INSERT INTO Nave (nome, descricao, tipo, limite, carga) VALUES
-('G4rim-PO', 'Nave de colet leve', 'Coleta', 200, 250),
-('DSTRYR', 'Nave de combate pesado', 'Combate', 500, 50);
+('G4rim-PO', 'Nave de colet leve', 'Coleta', 250, 0),
+('DSTRYR', 'Nave de combate pesado', 'Combate', 10, 0);
 
 
 INSERT INTO nave_piloto (id_piloto, id_nave) VALUES

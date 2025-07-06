@@ -425,7 +425,294 @@ END;
 $$;
 
 -- =====================================================
--- 5. TRIGGERS
+-- 5. SISTEMA DE COLETAS
+-- =====================================================
+
+-- 1. Procedure para coletar minério
+CREATE OR REPLACE PROCEDURE coletar_minerio(piloto_id INTEGER, minerio_id INTEGER)
+LANGUAGE plpgsql AS $$
+DECLARE
+    setor_piloto INTEGER;
+    id_nave_var INTEGER;
+    peso_minerio NUMERIC;
+    carga_atual NUMERIC;
+    limite_carga NUMERIC;
+    extracao_total NUMERIC;
+    quantidade_para_extrair INTEGER;
+    quantidade_atual INTEGER;
+    nome_minerio TEXT;
+BEGIN
+    -- Verificar se o piloto existe
+    IF NOT EXISTS(SELECT 1 FROM Piloto WHERE id = piloto_id) THEN
+        RAISE EXCEPTION 'Piloto com ID % não encontrado', piloto_id;
+    END IF;
+
+    -- Setor do piloto
+    SELECT setor INTO setor_piloto FROM Piloto WHERE id = piloto_id;
+    IF setor_piloto IS NULL THEN
+        RAISE EXCEPTION 'Piloto não possui setor definido';
+    END IF;
+
+    -- Nave do piloto
+    SELECT np.id_nave INTO id_nave_var FROM nave_piloto np WHERE np.id_piloto = piloto_id LIMIT 1;
+    IF id_nave_var IS NULL THEN
+        RAISE EXCEPTION 'Piloto não possui nave vinculada';
+    END IF;
+
+    -- Verificar se o minério existe
+    IF NOT EXISTS(SELECT 1 FROM Minerio WHERE id = minerio_id) THEN
+        RAISE EXCEPTION 'Minério com ID % não encontrado', minerio_id;
+    END IF;
+
+    -- Peso e quantidade do minério no setor
+    SELECT m.peso, ms.quantidade, m.nome INTO peso_minerio, quantidade_atual, nome_minerio
+    FROM Minerio m
+    JOIN minerio_setor ms ON ms.id_minerio = m.id
+    WHERE m.id = minerio_id AND ms.id_setor = setor_piloto;
+
+    IF NOT FOUND OR quantidade_atual <= 0 THEN
+        RAISE EXCEPTION 'Minério % não disponível no setor atual do piloto!', minerio_id;
+    END IF;
+
+    -- Carga atual e limite da nave
+    SELECT carga, limite INTO carga_atual, limite_carga FROM Nave WHERE id = id_nave_var;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Nave não encontrada';
+    END IF;
+
+    -- Soma extração dos equipamentos (ou 5 se for menor)
+    SELECT COALESCE(SUM(e.extracao), 0) INTO extracao_total
+    FROM nave_equipamento ne
+    JOIN Equipamento e ON e.nome = ne.nome_equipamento
+    WHERE ne.id_nave = id_nave_var AND ne.nave_atual = TRUE;
+
+    quantidade_para_extrair := GREATEST(extracao_total, 5)::INTEGER;
+
+    -- Verifica disponibilidade no setor e espaço na nave
+    IF quantidade_atual < quantidade_para_extrair THEN
+        RAISE EXCEPTION 'Quantidade insuficiente no setor para extração (requer %, disponível %)', quantidade_para_extrair, quantidade_atual;
+    END IF;
+
+    IF carga_atual + (peso_minerio * quantidade_para_extrair) > limite_carga THEN
+        RAISE EXCEPTION 'Nave sem espaço para essa carga de minério (limite: %, atual: %, necessário: %)', limite_carga, carga_atual, peso_minerio * quantidade_para_extrair;
+    END IF;
+
+    -- Atualiza carga da nave e quantidade no setor
+    UPDATE Nave SET carga = carga + (peso_minerio * quantidade_para_extrair) WHERE id = id_nave_var;
+    UPDATE minerio_setor SET quantidade = quantidade - quantidade_para_extrair WHERE id_minerio = minerio_id AND id_setor = setor_piloto;
+
+    -- Insere minérios na nave
+    FOR i IN 1..quantidade_para_extrair LOOP
+        INSERT INTO minerio_nave (id_minerio, id_nave) VALUES (minerio_id, id_nave_var);
+    END LOOP;
+
+    RAISE NOTICE '✅ Coletado % unidades de % (ID: %)', quantidade_para_extrair, nome_minerio, minerio_id;
+    RAISE NOTICE '📦 Carga atual da nave: % / %', carga_atual + (peso_minerio * quantidade_para_extrair), limite_carga;
+END;
+$$;
+
+-- 2. Procedure para vender minérios quando estiver em estação
+CREATE OR REPLACE PROCEDURE vender_minerios(piloto_id INTEGER)
+LANGUAGE plpgsql AS $$
+DECLARE
+    setor_piloto INTEGER;
+    id_nave_var INTEGER;
+    tipo_setor TEXT;
+    dinheiro_ganho NUMERIC := 0;
+    rec RECORD;
+    peso_total NUMERIC := 0;
+    dinheiro_atual NUMERIC;
+    nome_setor TEXT;
+BEGIN
+    -- Verificar se o piloto existe
+    IF NOT EXISTS(SELECT 1 FROM Piloto WHERE id = piloto_id) THEN
+        RAISE EXCEPTION 'Piloto com ID % não encontrado', piloto_id;
+    END IF;
+
+    -- Setor e tipo
+    SELECT setor INTO setor_piloto FROM Piloto WHERE id = piloto_id;
+    IF setor_piloto IS NULL THEN
+        RAISE EXCEPTION 'Piloto não possui setor definido';
+    END IF;
+
+    SELECT tipo, nome INTO tipo_setor, nome_setor FROM Setor WHERE id = setor_piloto;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Setor não encontrado';
+    END IF;
+
+    IF tipo_setor IS DISTINCT FROM 'Estação' THEN
+        RAISE EXCEPTION 'Só é possível vender minérios em uma estação! (Setor atual: % - Tipo: %)', nome_setor, tipo_setor;
+    END IF;
+
+    -- Nave do piloto
+    SELECT np.id_nave INTO id_nave_var FROM nave_piloto np WHERE np.id_piloto = piloto_id LIMIT 1;
+    IF id_nave_var IS NULL THEN
+        RAISE EXCEPTION 'Piloto não possui nave vinculada';
+    END IF;
+
+    -- Verificar se há minérios na nave
+    IF NOT EXISTS(SELECT 1 FROM minerio_nave WHERE id_nave = id_nave_var) THEN
+        RAISE NOTICE 'Nenhum minério para vender na nave.';
+        RETURN;
+    END IF;
+
+    -- Para cada tipo de minério na nave, calcula valor e soma
+    FOR rec IN
+        SELECT m.id, m.nome, m.valor, COUNT(mn.id) AS qtd
+        FROM minerio_nave mn
+        JOIN Minerio m ON m.id = mn.id_minerio
+        WHERE mn.id_nave = id_nave_var
+        GROUP BY m.id, m.nome, m.valor
+    LOOP
+        dinheiro_ganho := dinheiro_ganho + (rec.valor * rec.qtd);
+        peso_total := peso_total + (rec.qtd * (SELECT peso FROM Minerio WHERE id = rec.id));
+        RAISE NOTICE '💎 Vendendo % unidades de % por % créditos cada', rec.qtd, rec.nome, rec.valor;
+    END LOOP;
+
+    -- Obter dinheiro atual do piloto
+    SELECT dinheiro INTO dinheiro_atual FROM Piloto WHERE id = piloto_id;
+
+    -- Atualiza dinheiro do piloto
+    UPDATE Piloto SET dinheiro = dinheiro + dinheiro_ganho WHERE id = piloto_id;
+
+    -- Remove minérios da nave e reseta carga
+    DELETE FROM minerio_nave WHERE id_nave = id_nave_var;
+    UPDATE Nave SET carga = 0 WHERE id = id_nave_var;
+
+    RAISE NOTICE '💰 Total vendido: % créditos', dinheiro_ganho;
+    RAISE NOTICE '💳 Saldo anterior: % créditos', dinheiro_atual;
+    RAISE NOTICE '💳 Saldo atual: % créditos', dinheiro_atual + dinheiro_ganho;
+    RAISE NOTICE '📦 Carga da nave resetada para 0';
+END;
+$$;
+
+
+CREATE OR REPLACE FUNCTION ver_dinheiro_piloto(piloto_id INTEGER)
+RETURNS VOID AS $$
+DECLARE
+    saldo NUMERIC;
+    nome_piloto TEXT;
+BEGIN
+    -- Verificar se o piloto existe
+    IF NOT EXISTS(SELECT 1 FROM Piloto WHERE id = piloto_id) THEN
+        RAISE EXCEPTION 'Piloto com ID % não encontrado', piloto_id;
+    END IF;
+
+    SELECT dinheiro, email INTO saldo, nome_piloto FROM Piloto WHERE id = piloto_id;
+
+    IF saldo IS NULL THEN
+        RAISE NOTICE '💳 Piloto % (ID: %) possui 0 créditos.', nome_piloto, piloto_id;
+    ELSE
+        RAISE NOTICE '💳 Piloto % (ID: %) possui % créditos.', nome_piloto, piloto_id, saldo;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+-- =====================================================
+-- 5.1. PROCEDIMENTOS AUXILIARES PARA DEBUG
+-- =====================================================
+
+-- Procedimento para verificar status da nave e minérios
+CREATE OR REPLACE PROCEDURE status_nave_minerios(piloto_id INTEGER)
+LANGUAGE plpgsql AS $$
+DECLARE
+    id_nave INTEGER;
+    nome_nave TEXT;
+    carga_atual NUMERIC;
+    limite_carga NUMERIC;
+    rec RECORD;
+BEGIN
+    -- Verificar se o piloto existe
+    IF NOT EXISTS(SELECT 1 FROM Piloto WHERE id = piloto_id) THEN
+        RAISE EXCEPTION 'Piloto com ID % não encontrado', piloto_id;
+    END IF;
+
+    -- Nave do piloto
+    SELECT np.id_nave, n.nome, n.carga, n.limite 
+    INTO id_nave, nome_nave, carga_atual, limite_carga 
+    FROM nave_piloto np
+    JOIN Nave n ON n.id = np.id_nave
+    WHERE np.id_piloto = piloto_id LIMIT 1;
+    
+    IF id_nave IS NULL THEN
+        RAISE NOTICE '❌ Piloto não possui nave vinculada';
+        RETURN;
+    END IF;
+
+    RAISE NOTICE '';
+    RAISE NOTICE '🚀 === STATUS DA NAVE ===';
+    RAISE NOTICE 'Nave: % (ID: %)', nome_nave, id_nave;
+    RAISE NOTICE 'Carga atual: % / %', carga_atual, limite_carga;
+    RAISE NOTICE '';
+
+    -- Verificar minérios na nave
+    IF EXISTS(SELECT 1 FROM minerio_nave WHERE id_nave = id_nave) THEN
+        RAISE NOTICE '💎 === MINÉRIOS NA NAVE ===';
+        FOR rec IN
+            SELECT m.nome, COUNT(mn.id) AS quantidade, m.valor
+            FROM minerio_nave mn
+            JOIN Minerio m ON m.id = mn.id_minerio
+            WHERE mn.id_nave = id_nave
+            GROUP BY m.nome, m.valor
+            ORDER BY m.nome
+        LOOP
+            RAISE NOTICE '%: % unidades (valor: % créditos cada)', rec.nome, rec.quantidade, rec.valor;
+        END LOOP;
+    ELSE
+        RAISE NOTICE '📦 Nave vazia - nenhum minério carregado';
+    END IF;
+    RAISE NOTICE '';
+END;
+$$;
+
+-- Procedimento para verificar minérios disponíveis no setor atual
+CREATE OR REPLACE PROCEDURE minerios_disponiveis_setor(piloto_id INTEGER)
+LANGUAGE plpgsql AS $$
+DECLARE
+    setor_piloto INTEGER;
+    nome_setor TEXT;
+    rec RECORD;
+BEGIN
+    -- Verificar se o piloto existe
+    IF NOT EXISTS(SELECT 1 FROM Piloto WHERE id = piloto_id) THEN
+        RAISE EXCEPTION 'Piloto com ID % não encontrado', piloto_id;
+    END IF;
+
+    -- Setor do piloto
+    SELECT setor INTO setor_piloto FROM Piloto WHERE id = piloto_id;
+    IF setor_piloto IS NULL THEN
+        RAISE EXCEPTION 'Piloto não possui setor definido';
+    END IF;
+
+    SELECT nome INTO nome_setor FROM Setor WHERE id = setor_piloto;
+
+    RAISE NOTICE '';
+    RAISE NOTICE '🏔️ === MINÉRIOS DISPONÍVEIS EM % ===', nome_setor;
+
+    -- Verificar minérios no setor
+    IF EXISTS(SELECT 1 FROM minerio_setor WHERE id_setor = setor_piloto AND quantidade > 0) THEN
+        FOR rec IN
+            SELECT m.id, m.nome, ms.quantidade, m.peso, m.valor
+            FROM minerio_setor ms
+            JOIN Minerio m ON m.id = ms.id_minerio
+            WHERE ms.id_setor = setor_piloto AND ms.quantidade > 0
+            ORDER BY m.nome
+        LOOP
+            RAISE NOTICE 'ID %: % - % unidades (peso: %, valor: % créditos)', 
+                        rec.id, rec.nome, rec.quantidade, rec.peso, rec.valor;
+        END LOOP;
+    ELSE
+        RAISE NOTICE '❌ Nenhum minério disponível neste setor';
+    END IF;
+    RAISE NOTICE '';
+END;
+$$;
+
+-- =====================================================
+-- 6. TRIGGERS
 -- =====================================================
 
 -- Trigger para validar movimentação
@@ -486,4 +773,13 @@ CREATE TRIGGER trigger_log_movimentacao_piloto
 \echo '  CALL navegar_manual(1, ''4''); -- OESTE'
 \echo '  CALL status_piloto(1);'
 \echo '  CALL mostrar_mapa();'
-\echo '  CALL forcar_boas_vindas(1);' 
+\echo '  CALL forcar_boas_vindas(1);'
+\echo ''
+\echo 'Comandos de Mineração:'
+\echo '  CALL coletar_minerio(1, 1); -- Coleta minério ID 1'
+\echo '  CALL vender_minerios(1); -- Vende minérios em estação'
+\echo '  SELECT ver_dinheiro_piloto(1); -- Ver saldo'
+\echo ''
+\echo 'Comandos de Debug:'
+\echo '  CALL status_nave_minerios(1); -- Status da nave e minérios'
+\echo '  CALL minerios_disponiveis_setor(1); -- Minérios no setor atual' 
