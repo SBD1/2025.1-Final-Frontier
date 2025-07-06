@@ -47,12 +47,6 @@ CALL navegar_manual(1, '4');  -- OESTE
 CALL mostrar_mapa();
 ```
 
-#### Ver posição atual do piloto (simples):
-```sql
-SELECT p.id, p.email, s.nome as setor_atual, s.tipo 
-FROM Piloto p 
-LEFT JOIN Setor s ON p.setor = s.id;
-```
 
 ### 4. Comandos para Acompanhar sua Movimentação
 
