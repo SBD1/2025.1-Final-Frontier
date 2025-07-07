@@ -819,6 +819,31 @@ CREATE TRIGGER trigger_log_movimentacao_piloto
     FOR EACH ROW
     EXECUTE FUNCTION trigger_log_movimentacao();
 
+-- Cria nave inicial com Piloto novo
+CREATE OR REPLACE FUNCTION criar_nave_para_piloto()
+RETURNS TRIGGER AS $$
+DECLARE
+    nova_nave_id INTEGER;
+BEGIN
+    -- Cria uma nave padrão
+    INSERT INTO nave (nome, descricao, tipo, limite, carga) VALUES ('St4rt', 'Nave inicial', 'Coleta', 50, 0)
+    RETURNING id INTO nova_nave_id;
+
+    -- Relaciona piloto com a nova nave
+    INSERT INTO nave_piloto (id_piloto, id_nave)
+    VALUES (NEW.id, nova_nave_id);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_criar_nave_para_piloto
+AFTER INSERT ON Piloto
+FOR EACH ROW
+EXECUTE FUNCTION criar_nave_para_piloto();
+
+
+
 -- =====================================================
 -- SISTEMA COMPLETO INSTALADO!
 -- =====================================================
