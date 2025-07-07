@@ -124,4 +124,20 @@ export const minerar = async (minerio) => {
     }
 }
 
+export const escanear = async (id) => {
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await api.get(`/pilot/escanear/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+        return response.data;
+    } catch(err) {
+        console.error('Erro ao escanear setor: ', err);
+        throw err;
+    }
+}
+
 export default api;

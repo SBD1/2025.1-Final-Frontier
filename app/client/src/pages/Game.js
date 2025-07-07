@@ -2,6 +2,10 @@ import { useEffect, useState, useRef } from 'react';
 import { currSector, moveToSector, findNearbySectors, pilotStatus, showGameMap, minerar } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
+<<<<<<< HEAD
+=======
+import { escanear, minerar } from '../../../server/controllers/pilotControllers';
+>>>>>>> 0b558035becb992d85b5c7b2ed050efe9d353e01
 
 const Game = () => {
     const [errMessage, setErrMessage] = useState('');
@@ -85,6 +89,9 @@ const Game = () => {
                 } else {
                     return 'Minério não encontrado. Minérios existentes são (prismatina, zetânio, cronóbio). Tente usar o comando escanear para ver os minérios disponíveis no seu setor.'
                 }
+            case 'escanear':
+                escanear();
+                return '### ESCANEANDO SEU SETOR'
             default:
                 return 'Comando inexistente.';
         }

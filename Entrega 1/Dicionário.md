@@ -47,8 +47,8 @@ Armazena informações referentes ao piloto.
 | Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
 |----------------|-------------------------------------------|--------------|---------|------------------------|
 | `idPiloto`     | Identificador único do usuário            | `SERIAL`     | -       | PK, Not Null           |
-| `email`        | Email de login                            | `VARCHAR`    | 50      | Not Null               |
-| `senha`        | Senha de login                            | `VARCHAR`    | 50      | Not Null               |
+| `email`        | Email de login                            | `VARCHAR`    | 50      | PK, Not Null           |
+| `senha`        | Senha de login                            | `VARCHAR`    | 50      | PK, Not Null           |
 
 
 ---
@@ -108,4 +108,89 @@ Armazena informações de quais motores o mercado vende.
 | `nome_motor`   | Nome do motor                             | `VARCHAR`    | 30      | Not Null               |
 | `nome_mercado` | Nome do mercado                           | `VARCHAR`    | 30      | Not Null               |
 | `preco`        | Valor do equipamento                      | `INTEGER`    | -       | Not Null               |
+
+## **Tabela: `Anuncia`**
+Armazena informações de quais motores, equipamentos e naves o mercado vende para o piloto.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `naves`      | Identificador único da instância            | `VARCHAR`     | 30     | Not Null               |
+| `motores`   | Nome do motor                                | `VARCHAR`    | 30      | Not Null               |
+| `equipamentos` | Nome do mercado                           | `VARCHAR`    | 30      | Not Null               |
+
+## **Tabela: `Vende`**
+Armazena informações do preço do motor que está sendo vendido.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `preco_motor`  | Preço do motor                            | `VARCHAR`     | 30     | Not Null               |
+
+## **Tabela: `Vende`**
+Armazena informações do preço do equipamento que está sendo vendido.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `preco_equipamento`  | Preço do equipamento                | `VARCHAR`     | 30     | Not Null               |
+
+## **Tabela: `Vende`**
+Armazena informações do preço da nave que está sendo vendido.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `preco_nave`   | Preço da nave                             | `VARCHAR`     | 30     | Not Null               |
+
+---
+
+## **Tabela: `Setor`**
+Armazena a informação do setor.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `idSetor`      | Identificador único da instância          | `SERIAL`     | -       | PK, Not Null           |
+| `nome`         | Nome do setor                             | `VARCHAR`    | 30      | Not Null               |
+| `tipo`         | Tipo de setor                             | `VARCHAR`    | 30      | Not Null               |
+
+## **Tabela: `Conecta`**
+Armazena informações de quais setores existem.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `Norte`        | Cardinalidade que o piloto pode ir        | `VARCHAR`     | 30     | Not Null               |
+| `Sul`          | Cardinalidade que o piloto pode ir        | `VARCHAR`    | 30      | Not Null               |
+| `Leste`        | Cardinalidade que o piloto pode ir        | `VARCHAR`    | 30      | Not Null               |
+| `Oeste`        | Cardinalidade que o piloto pode ir        | `VARCHAR`    | 30      | Not Null               |
+| `Portal`       | Portal que se abre, permitindo o piloto ir para outro lugar     | `VARCHAR`    | 30      | Not Null               |
+
+## **Tabela: `Abriga`**
+Armazena informação de qual setor o minério está.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `setor_atual`  | Setor que o minério se encontra           | `VARCHAR`     | 30     | Not Null               |
+
+## **Tabela: `Abriga`**
+Armazena informação de qual setor o piloto está.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `setor_atual`  | Setor que o minério se encontra           | `VARCHAR`     | 30     | Not Null               |
+
+---
+
+## **Tabela: `Usa`**
+Armazena informação de qual nave o piloto está usando.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `nave_atual`   | Nave atual que o piloto está usando       | `VARCHAR`     | 30     | Not Null               |
+
+## **Tabela: `Coleta`**
+Armazena informação da coleta de minério na nave que o piloto está.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `nave_atual`   | Armazena o minério na nave atual          | `VARCHAR`    | 30     | Not Null               |
+
+## **Tabela: `Possui`**
+Armazena informação de qual motor o piloto está usando.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `nave_atual`   | Armazena o minério na nave atual          | `VARCHAR`    | 30     | Not Null               |
+
+## **Tabela: `Possui`**
+Armazena informação de qual equipamento o piloto está usando.
+| Nome           | Descrição                                 | Tipo de dado | Tamanho | Restrições de domínio  |
+|----------------|-------------------------------------------|--------------|---------|------------------------|
+| `nave_atual`   | Armazena o minério na nave atual          | `VARCHAR`    | 30     | Not Null               |
+
 
