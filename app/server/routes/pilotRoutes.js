@@ -4,8 +4,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-// router.post('/register', authMiddleware, register);
-router.get('/currSector', authMiddleware, currSector);
+// router.post('/register', authMiddleware, register);-
 router.put('/move', authMiddleware, moveToSector);
 router.get('/status', authMiddleware, status);
 router.put('/minerar', authMiddleware, minerar)

@@ -8,8 +8,8 @@ const pool = new Pool({
     port: 5432,
 });
 
-pool.on('notice', (notice) => {
-    console.log('PG NOTICE:', notice.message);
-});
+// pool.on('notice', (notice) => {
+//     console.log('PG NOTICE:', notice.message);
+// });
 
 module.exports = pool;
