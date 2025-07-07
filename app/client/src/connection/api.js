@@ -43,6 +43,22 @@ export const currSector = async () => {
     }
 };
 
+export const pilotStatus = async () => {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await api.get('/pilot/status', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (err) {
+        console.error('Erro ao recuperar status: ', err);
+        throw err;
+    }
+};
+
 export const moveToSector = async (direction) => {
     const token = localStorage.getItem('token');
     console.log(direction);
@@ -58,7 +74,6 @@ export const moveToSector = async (direction) => {
         throw err;
     }
 };
-
 
 export const findNearbySectors = async (id) => {
     const token = localStorage.getItem('token');

@@ -19,49 +19,44 @@ exports.currSector = async(req, res) => {
     }
 };
 
+exports.status = async(req, res) => {
+    const client = await pool.connect();
+    const notices = []
+
+    try {
+        client.on('notice', (notice) => {
+            notices.push(notice.message);
+        });
+
+        result = await client.query(
+            "CALL status_piloto($1)",
+            [req.user.id]
+        );
+
+        console.log(notices);
+        res.status(201).json(notices);
+
+    } catch(err) {
+        res.status(400).json({error: err.message});
+    }
+}
+
 exports.moveToSector = async (req, res) => {
     const {direction} = req.body;
 
     // check if direction is valid
     try {
-        const pilot = await pool.query("SELECT * FROM pilot WHERE id = $1", [req.user.id]);
-        const curr_sector = await pool.query("SELECT * FROM sector WHERE id = ($1)", [pilot.rows[0].sector_id]);
-
-        if(direction == 'norte'){
-            if(curr_sector.rows[0].nsector_id == null){
-                return res.status(400).json({message: 'Não existe setores nessa direção.'});
-            } else {
-                const destiny_id = curr_sector.rows[0].nsector_id;
-                await pool.query("UPDATE pilot SET sector_id = ($1)", [destiny_id]);
-            } 
-        } else if(direction == 'sul'){
-            if(curr_sector.rows[0].ssector_id == null){
-                return res.status(400).json({message: 'Não existe setores nessa direção.'});
-            } else {
-                const destiny_id = curr_sector.rows[0].ssector_id;
-                await pool.query("UPDATE pilot SET sector_id = ($1)", [destiny_id]);
-            }
-        } else if(direction == 'oeste'){
-            if(curr_sector.rows[0].wsector_id == null){
-                return res.status(400).json({message: 'Não existe setores nessa direção.'});
-            } else {
-                const destiny_id = curr_sector.rows[0].wsector_id;
-                await pool.query("UPDATE pilot SET sector_id = ($1)", [destiny_id]);
-            } 
-        } else if(direction == 'leste'){
-            if(curr_sector.rows[0].esector_id == null){
-                return res.status(400).json({message: 'Não existe setores nessa direção.'});
-            } else {
-                const destiny_id = curr_sector.rows[0].esector_id;
-                await pool.query("UPDATE pilot SET sector_id = ($1)", [destiny_id]);
-            } 
-        } else {
-            return res.status(400).json({message: 'Direção inválida!'});
+        if (direction == 'norte'){
+            await pool.query("CALL navegar_manual($1, '1');", [req.user.id]);
+        } else if (direction == 'sul'){
+            await pool.query("CALL navegar_manual($1, '2');", [req.user.id]);
+        } else if (direction == 'leste'){
+            await pool.query("CALL navegar_manual($1, '3');", [req.user.id]);
+        } else if (direction == 'oeste'){
+            await pool.query("CALL navegar_manual($1, '4');", [req.user.id]);
         }
 
-        const updt_pilot = await pool.query("SELECT * FROM pilot WHERE id = $1", [req.user.id]);        
-
-        res.status(200).json(updt_pilot.rows[0]);
+        // res.status(200).json(response.rows[0]);
     } catch(err) {
         res.status(400).json({error: err.message});
     }

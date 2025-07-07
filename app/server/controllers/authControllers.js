@@ -9,7 +9,7 @@ exports.register = async(req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         await pool.query(
-            "INSERT INTO pilot (username, password) VALUES ($1, $2) RETURNING *",
+            "INSERT INTO piloto (email, senha) VALUES ($1, $2) RETURNING *",
             [username, hashedPassword]
         );
         res.status(201).json({message:'Usuário cadastrado!'});
@@ -22,10 +22,10 @@ exports.login = async(req, res) => {
     const { username, password } = req.body;
 
     try {
-        const user = await pool.query("SELECT * FROM pilot WHERE username = $1", [username]);
+        const user = await pool.query("SELECT * FROM piloto WHERE email = $1", [username]);
         if (user.rows.length === 0) return res.status(400).json({error: 'Usuário não encontrado!'});
 
-        const validPassword = await bcrypt.compare(password, user.rows[0].password);
+        const validPassword = await bcrypt.compare(password, user.rows[0].senha);
         if (!validPassword) return res.status(400).json({error: 'Senha inválida!'});
 
         const token = jwt.sign(

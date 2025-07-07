@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { currSector, moveToSector, findNearbySectors } from '../connection/api';
+import { currSector, moveToSector, findNearbySectors, pilotStatus } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
 
@@ -7,47 +7,32 @@ const Game = () => {
     const [errMessage, setErrMessage] = useState('');
     const [userInput, setUserInput] = useState('');
     const [messages, setMessages] = useState([`Bem-vindo ao TERRAN_OS. Todos os sitemas online.`]);
+    const [notices, setNotices] = useState([]);
     const [contentFile, setContentFile] = useState('basicShip.txt');
 
-    const [currentSector, setCurrentSector] = useState('');
-    const [currentSectorID, setCurrentSectorID] = useState(null);
-    const [nearbySectors, setNearbySectors] = useState({});
     const [displayContent, setDisplayContent] = useState('');
-
-    const [userRequestUpdate, setUserRequestUpdate] = useState(false);
 
     const scrollRef = useRef(null);
 
+    // MANTÉM O TEXTO EMBAIXO
     useEffect(() => {
         if(scrollRef.current){
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [messages]);
+    }, [messages, notices]);
 
-    const getNearbySectors = async () => {
+    const getPilotStatus = async() => {
         try {
-            const response = await findNearbySectors(currentSectorID);
-            setNearbySectors(response);
+            const response = await pilotStatus();
+            setNotices(response);
         } catch (err) {
-            console.log('aqui; ', err);
-            setErrMessage(err.response.error);
-        }
-    };
-
-    const getCurrentSector = async() => {
-        try {
-            const response = await currSector();
-            setCurrentSector(response.name);
-            setCurrentSectorID(response.id);
-        } catch (err) {
-            setCurrentSector(err.response.data.error);
+            setErrMessage(err.response.data.error);
         }
     };
     
     const move = async(direction) => {
         try {
             await moveToSector({direction});
-            await getCurrentSector();
         } catch (err) {
             setErrMessage(err.response.data.message);
         }   
@@ -67,27 +52,9 @@ const Game = () => {
                 } else {
                     return 'Esse comando espera uma das direções: norte, sul, leste, oeste.'
                 }
-            case 'setor':
-                let flag = input.split(' ');
-                if (flag[1] === 'prox'){
-                    getNearbySectors();
-                    let result = [`Os setores adjacentes de ${currentSector} são:`];
-                    if (nearbySectors.north){
-                        result.push(`NORTE: ${nearbySectors.north}.`);
-                    }
-                    if (nearbySectors.south){
-                        result.push(`SUL: ${nearbySectors.south}.`);
-                    }
-                    if (nearbySectors.west){
-                        result.push(`OESTE: ${nearbySectors.west}.`);
-                    }
-                    if (nearbySectors.east){
-                        result.push(`LESTE: ${nearbySectors.east}.`);
-                    }
-                    return result;
-                } else {
-                    return [`Setor atual: ${currentSector}.`];
-                }
+            case 'status':
+                getPilotStatus();
+                return '### SOLICITANDO STATUS DO PILOTO';
             default:
                 return 'Comando inexistente.';
         }
@@ -100,8 +67,9 @@ const Game = () => {
     const handleUserSubmit = (e) => {
         if(e.key === 'Enter'){
             e.preventDefault();
-            setUserRequestUpdate(!userRequestUpdate);
             const result = handleCommands(userInput);
+            console.log(notices);
+
             if(Array.isArray(result)){
                 setMessages((prevMsgs) => [...prevMsgs, '>> '+userInput  ]);
                 result.forEach(item => {
@@ -111,13 +79,16 @@ const Game = () => {
                 setMessages((prevMsgs) => [...prevMsgs, '>> '+userInput  ]);
                 setMessages((prevMsgs) => [...prevMsgs, result]);
             }
+
             document.getElementById('userInput').value = '';
         }
     };
 
-    const handleSystemMessage = (msg) => {
-        setMessages((prevMsgs) => [...prevMsgs, msg]);
-    }
+    useEffect(() => {
+        notices.forEach(item => {
+            setMessages((prevMsgs) => [...prevMsgs, item]);
+        });
+    }, [notices])
 
     useEffect(() => {
         fetch('/' + contentFile)
@@ -125,26 +96,6 @@ const Game = () => {
         .then((text) => setDisplayContent(text))
         .catch((err) => console.log('File error: ', err));
     });
-    
-    useEffect(() => {
-        getCurrentSector();
-        if(currentSector != ''){
-            handleSystemMessage(`Entrando agora no setor ${currentSector}.`);
-        }
-    }, [currentSector]);
-
-    useEffect(() => {
-        if(currentSectorID != null){
-            getNearbySectors();
-        }
-    }, [userRequestUpdate, currentSector]);
-
-    useEffect(() => {
-        if(errMessage !== ''){
-            handleSystemMessage(`[!]FALHA: ${errMessage}`);
-        }
-    }, [errMessage]);
-
 
     return(
         <div className='gameContainer'>
