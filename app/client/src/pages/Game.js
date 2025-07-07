@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { currSector, moveToSector, findNearbySectors, pilotStatus } from '../connection/api';
+import { currSector, moveToSector, findNearbySectors, pilotStatus, showGameMap } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
 
@@ -32,11 +32,21 @@ const Game = () => {
     
     const move = async(direction) => {
         try {
-            await moveToSector({direction});
+            const response = await moveToSector({direction});
+            setNotices(response);
         } catch (err) {
             setErrMessage(err.response.data.message);
         }   
     };
+
+    const showMap = async() => {
+        try{
+            const response = await showGameMap();
+            setNotices(response);
+        } catch (err) {
+            setErrMessage(err.response.data.message);
+        }
+    }
     
     const handleCommands = (input) => {
         let command = input.split(' ')[0];
@@ -55,6 +65,9 @@ const Game = () => {
             case 'status':
                 getPilotStatus();
                 return '### SOLICITANDO STATUS DO PILOTO';
+            case 'mapa':
+                showMap();
+                return '### SOLICITANDO MAPA DA GALÁXIA'
             default:
                 return 'Comando inexistente.';
         }

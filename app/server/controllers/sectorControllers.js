@@ -129,10 +129,24 @@ exports.connectSectors = async(req, res) => {
     }
 };
 
-exports.getAll = async (req, res) => {
+exports.showMap = async(req, res) => {
+    const client = await pool.connect();
+    const notices = [];
+
+    console.log('teste');
+
     try {
-        const result = await pool.query("SELECT * FROM sector");
-        res.status(200).json(result.rows);
+        client.on('notice', (notice) => {
+            notices.push(notice.message);
+        });
+
+        result = await client.query(
+            "CALL mostrar_mapa()"
+        );
+
+        console.log(notices);
+        res.status(200).json(notices);
+
     } catch(err) {
         res.status(400).json({error: err.message});
     }

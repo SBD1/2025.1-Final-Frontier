@@ -18,6 +18,22 @@ export const login = async (credentials) => {
     }
 };
 
+export const showGameMap = async () => {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await api.get('/sector/showMap', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (err) {
+        console.error('Erro ao recuperar status: ', err);
+        throw err;
+    }
+};
+
 export const register = async (credentials) => {
     try {
         const response = await api.post('/auth/register', credentials);
