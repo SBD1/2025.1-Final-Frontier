@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { currSector, moveToSector, findNearbySectors, pilotStatus, showGameMap, minerar, escanear } from '../connection/api';
+import { moveToSector, pilotStatus, showGameMap, minerar, escanear, vender } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
 
@@ -58,9 +58,18 @@ const Game = () => {
         }
     }
     
-    const executeScan = async () =>{
+    const executeScan = async () => {
         try{
             const response = await escanear();
+            setNotices(response);
+        } catch(err) {
+            setErrMessage(err.response.data.message);
+        }
+    }
+
+    const makeSale = async () => {
+        try {
+            const response = await vender();
             setNotices(response);
         } catch(err) {
             setErrMessage(err.response.data.message);
@@ -98,6 +107,9 @@ const Game = () => {
             case 'escanear':
                 executeScan();
                 return 'Escaneando setor atual.'
+            case 'vender':
+                makeSale();
+                return 'Tentando realizar venda.'
             default:
                 return 'Comando inexistente.';
         }
@@ -126,9 +138,9 @@ const Game = () => {
         }
     };
 
-    useEffect(() => {
-        setMessages((prevMsgs) => [...prevMsgs, errMessage]);
-    }, [errMessage]); 
+    // useEffect(() => {
+    //     setMessages((prevMsgs) => [...prevMsgs, errMessage]);
+    // }, [errMessage]); 
 
     useEffect(() => {
         notices.forEach(item => {

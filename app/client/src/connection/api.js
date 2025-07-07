@@ -107,7 +107,7 @@ export const minerar = async (minerio) => {
     }
 }
 
-export const escanear = async (id) => {
+export const escanear = async () => {
     const token = localStorage.getItem('token');
 
     try {
@@ -119,6 +119,22 @@ export const escanear = async (id) => {
         return response.data;
     } catch(err) {
         console.error('Erro ao escanear setor: ', err);
+        throw err;
+    }
+}
+
+export const vender = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await api.get(`/pilot/vender`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+        return response.data;
+    } catch(err) {
+        console.error('Erro ao realizar a venda: ', err);
         throw err;
     }
 }

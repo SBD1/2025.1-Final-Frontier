@@ -861,7 +861,7 @@ EXECUTE FUNCTION criar_nave_para_piloto();
 \echo '  CALL forcar_boas_vindas(1);' -- IGNORAR
 \echo ''
 \echo 'Comandos de Mineração:'
-\echo '  CALL coletar_minerio(1, 1); -- Coleta minério ID 1'
+\echo '  CALL coletar_minerio(1, 1); -- Coleta minério ID 1' -- FEITO
 \echo '  CALL vender_minerios(1); -- Vende minérios em estação'
 \echo '  SELECT ver_dinheiro_piloto(1); -- Ver saldo'
 \echo '  CALL comprar_mais_carga_nave(1) -- Aumenta a carga total da sua nave'

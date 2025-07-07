@@ -94,3 +94,26 @@ exports.escanear = async (req, res) => {
         res.status(400).json({error: err.message});
     }
 }
+
+exports.vender = async (req, res) => {
+    const client = await pool.connect();
+    const notices = [];
+
+    try {
+        client.on('notice', (notice) => {
+            notices.push(notice.message);
+        });
+
+        result = await client.query(
+            "CALL vender_minerios($1)",
+            [req.user.id]
+        );
+
+        console.log(notices);
+
+        res.status(201).json(notices);
+
+    } catch(err) {
+        res.status(400).json({error: err.message});
+    }
+}
