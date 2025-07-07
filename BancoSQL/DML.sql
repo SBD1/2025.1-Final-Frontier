@@ -45,7 +45,8 @@ INSERT INTO minerio_setor (id_minerio, id_setor, quantidade) VALUES
 
 
 INSERT INTO Nave (nome, descricao, tipo, limite, carga) VALUES
-('G4rim-PO', 'Nave de colet leve', 'Coleta', 250, 0),
+('G4rim-PO', 'Nave de coleta leve', 'Coleta', 250, 0),
+('M3G4-drill', 'Nave de coleta leve', 'Coleta', 250, 0),
 ('DSTRYR', 'Nave de combate pesado', 'Combate', 10, 0);
 
 

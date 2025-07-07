@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import { currSector, moveToSector, findNearbySectors, pilotStatus, showGameMap } from '../connection/api';
+import { currSector, moveToSector, findNearbySectors, pilotStatus, showGameMap, minerar } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
-import { minerar } from '../../../server/controllers/pilotControllers';
 
 const Game = () => {
     const [errMessage, setErrMessage] = useState('');
@@ -48,6 +47,15 @@ const Game = () => {
             setErrMessage(err.response.data.message);
         }
     }
+
+    const executeMining = async (minerio) => {
+        try{
+            const response = await minerar({minerio});
+            setNotices(response);
+        } catch(err) {
+            setErrMessage(err.response.data.message);
+        }
+    }
     
     const handleCommands = (input) => {
         let command = input.split(' ')[0];
@@ -65,17 +73,17 @@ const Game = () => {
                 }
             case 'status':
                 getPilotStatus();
-                return '### SOLICITANDO STATUS DO PILOTO';
+                return 'Solicitando status do piloto.';
             case 'mapa':
                 showMap();
-                return '### SOLICITANDO MAPA DA GALÁXIA'
+                return 'Solicitando mapa da galáxia.'
             case 'minerar':
                 let minerio = input.split(' ');
                 if(minerio[1]){
-                    minerar(minerio[1]);
-                    return `Minerando ${direction[1]}.`;
+                    executeMining(minerio[1]);
+                    return `Minerando ${minerio[1]}.`;
                 } else {
-                    return 'Minerio não encontrado, tente usar o comando escanear para ver os minérios disponíveis no seu setor.'
+                    return 'Minério não encontrado. Minérios existentes são (prismatina, zetânio, cronóbio). Tente usar o comando escanear para ver os minérios disponíveis no seu setor.'
                 }
             default:
                 return 'Comando inexistente.';

@@ -108,11 +108,11 @@ export const findNearbySectors = async (id) => {
     }
 }
 
-export const minerar = async (nomeMinerio) => {
+export const minerar = async (minerio) => {
     const token = localStorage.getItem('token');
 
     try {
-        const response = await api.get(`/pilot/minerar/${nomeMinerio}`, {
+        const response = await api.put(`/pilot/minerar`, (minerio), {
             headers: {
                 Authorization: `Bearer ${token}`,
             }

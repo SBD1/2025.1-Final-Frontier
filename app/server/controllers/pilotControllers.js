@@ -49,15 +49,26 @@ exports.moveToSector = async (req, res) => {
 };
 
 exports.minerar = async (req, res) => {
-    const {minerio} = req.params.nomeMinerio
+    const {minerio} = req.body;
+    const client = await pool.connect();
+    const notices = [];
+
+    console.log(minerio);
+
     try {
-        if (minerio == 'Prismatina'){
-            await pool.query("CALL coletar_minerio($1, '1');", [req.user.id]);
-        } else if (minerio == 'Zetânio'){
-            await pool.query("CALL coletar_minerio($1, '2');", [req.user.id]);
-        } else if (minerio == 'Cronóbio'){
-            await pool.query("CALL coletar_minerio($1, '3');", [req.user.id]);
+        client.on('notice', (notice) => {
+            notices.push(notice.message);
+        });
+
+        if (minerio == 'prismatina'){
+            await client.query("CALL coletar_minerio($1, '1');", [req.user.id]);
+        } else if (minerio == 'zetânio'){
+            await client.query("CALL coletar_minerio($1, '2');", [req.user.id]);
+        } else if (minerio == 'cronóbio'){
+            await client.query("CALL coletar_minerio($1, '3');", [req.user.id]);
         }
+        console.log(notices);
+        res.status(201).json(notices);
     } catch(err) {
         res.status(400).json({error: err.message});
     }

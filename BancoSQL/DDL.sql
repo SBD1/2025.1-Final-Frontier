@@ -54,13 +54,6 @@ CREATE TABLE minerio_setor (
     CONSTRAINT uq_minerio_setor UNIQUE (id_minerio, id_setor) 
 );
 
--- Tabela: minerio_nave
-CREATE TABLE minerio_nave (
-    id SERIAL PRIMARY KEY,
-    id_minerio INTEGER REFERENCES Minerio(id),
-    id_nave INTEGER REFERENCES Nave(id)
-);
-
 -- Tabela: Nave
 CREATE TABLE Nave (
     id SERIAL PRIMARY KEY,
@@ -70,6 +63,14 @@ CREATE TABLE Nave (
     limite NUMERIC, -- limite máximo de carga
     carga NUMERIC -- carga atual
 );
+
+-- Tabela: minerio_nave
+CREATE TABLE minerio_nave (
+    id SERIAL PRIMARY KEY,
+    id_minerio INTEGER REFERENCES Minerio(id),
+    id_nave INTEGER REFERENCES Nave(id)
+);
+
 
 -- Tabela: nave_piloto
 CREATE TABLE nave_piloto (

@@ -826,14 +826,14 @@ CREATE TRIGGER trigger_log_movimentacao_piloto
 \echo '✅ SISTEMA COMPLETO DE NAVEGAÇÃO INSTALADO!'
 \echo ''
 \echo 'Comandos disponíveis:'
-\echo '  CALL boas_vindas_automatico(1);'
-\echo '  CALL navegar_manual(1, ''1''); -- NORTE'
-\echo '  CALL navegar_manual(1, ''2''); -- SUL'
-\echo '  CALL navegar_manual(1, ''3''); -- LESTE'
-\echo '  CALL navegar_manual(1, ''4''); -- OESTE'
-\echo '  CALL status_piloto(1);'
-\echo '  CALL mostrar_mapa();'
-\echo '  CALL forcar_boas_vindas(1);'
+\echo '  CALL boas_vindas_automatico(1);' -- IGNORAR
+\echo '  CALL navegar_manual(1, ''1''); -- NORTE' -- FEITO
+\echo '  CALL navegar_manual(1, ''2''); -- SUL' -- FEITO
+\echo '  CALL navegar_manual(1, ''3''); -- LESTE' -- FEITO
+\echo '  CALL navegar_manual(1, ''4''); -- OESTE' -- FEITO
+\echo '  CALL status_piloto(1);' -- FEITO
+\echo '  CALL mostrar_mapa();' -- FEITO
+\echo '  CALL forcar_boas_vindas(1);' -- IGNORAR
 \echo ''
 \echo 'Comandos de Mineração:'
 \echo '  CALL coletar_minerio(1, 1); -- Coleta minério ID 1'

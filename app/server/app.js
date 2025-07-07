@@ -26,34 +26,3 @@ app.use('/api/sector', sectorRoutes);
 app.use('/api/pilot', pilotRoutes);
 
 module.exports = app;
-
-// app.get('/profile', authenticateToken, async(req, res) => {
-//     try {
-//         const user = await pool.query("SELECT id, username FROM pilot WHERE id = $1", req.user.id);
-//         res.json(user.rows[0]);
-//     } catch(err) {
-//         res.status(500).json({error:err.message});
-//     }
-// });
-
-// function authenticateToken(req, res, next) {
-//     const token = req.header('Authorization')?.split(' ')[1];
-//     if (!token) return res.status(401).json({error:'Acesso negado!'});
-
-//     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-//         if (err) return res.status(403).json({error: 'Token inválido!'});
-//         req.user = user;
-//         next();
-//     });
-// }
-
-// app.listen(5000, () => console.log('Server running on port 5000!'));
-
-// async function connectionTest() {
-//     try {
-//         const res = await pool.query('SELECT NOW()');
-//         console.log('Successful conncetion! Time: ', res.rows[0].now);
-//     } catch(err) {
-//         console.error('Error: ', err);
-//     }
-// }
