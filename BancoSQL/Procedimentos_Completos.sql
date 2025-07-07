@@ -608,6 +608,66 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION comprar_mais_carga_nave(piloto_id INTEGER)
+LANGUAGE plpgsql AS $$
+DECLARE
+    id_nave_var INTEGER;
+    dinheiro_atual NUMERIC;
+    custo_upgrade NUMERIC := 300; -- Custo fixo do upgrade
+    incremento_carga INTEGER := 30; -- Quanto será aumentado o limite de carga
+    nova_carga_maxima INTEGER;
+    tipo_setor TEXT;
+    nome_setor TEXT;
+BEGIN
+    -- Verificar se o piloto existe
+    IF NOT EXISTS(SELECT 1 FROM Piloto WHERE id = piloto_id) THEN
+        RAISE EXCEPTION 'Piloto com ID % não encontrado', piloto_id;
+    END IF;
+
+    -- Obter nave vinculada ao piloto
+    SELECT np.id_nave INTO id_nave_var FROM nave_piloto np WHERE np.id_piloto = piloto_id LIMIT 1;
+    IF id_nave_var IS NULL THEN
+        RAISE EXCEPTION 'Piloto não possui nave vinculada';
+    END IF;
+
+    -- Setor e tipo
+    SELECT setor INTO setor_piloto FROM Piloto WHERE id = piloto_id;
+    IF setor_piloto IS NULL THEN
+        RAISE EXCEPTION 'Piloto não possui setor definido';
+    END IF;
+
+    SELECT tipo, nome INTO tipo_setor, nome_setor FROM Setor WHERE id = setor_piloto;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Setor não encontrado';
+    END IF;
+
+    IF tipo_setor IS DISTINCT FROM 'Estação' THEN
+        RAISE EXCEPTION 'Só é possível comprar upgrades em uma estação! (Setor atual: % - Tipo: %)', nome_setor, tipo_setor;
+    END IF;
+
+    -- Obter dinheiro atual do piloto
+    SELECT dinheiro INTO dinheiro_atual FROM Piloto WHERE id = piloto_id;
+
+    -- Verificar se há dinheiro suficiente
+    IF dinheiro_atual < custo_upgrade THEN
+        RAISE EXCEPTION 'Créditos insuficientes: necessário %, disponível %', custo_upgrade, dinheiro_atual;
+    END IF;
+
+    -- Subtrai o valor do upgrade do dinheiro do piloto
+    UPDATE Piloto SET dinheiro = dinheiro - custo_upgrade WHERE id = piloto_id;
+
+    -- Aumenta o limite de carga da nave
+    UPDATE Nave SET limite = limite + incremento_carga WHERE id = id_nave_var;
+
+    -- Exibe novo limite para confirmação
+    SELECT limite INTO nova_carga_maxima FROM Nave WHERE id = id_nave_var;
+
+    RAISE NOTICE '🚀 Upgrade concluído com sucesso!';
+    RAISE NOTICE '💸 Créditos gastos: %', custo_upgrade;
+    RAISE NOTICE '📦 Novo limite de carga da nave: %', nova_carga_maxima;
+END;
+$$;
+
 
 
 
@@ -779,6 +839,7 @@ CREATE TRIGGER trigger_log_movimentacao_piloto
 \echo '  CALL coletar_minerio(1, 1); -- Coleta minério ID 1'
 \echo '  CALL vender_minerios(1); -- Vende minérios em estação'
 \echo '  SELECT ver_dinheiro_piloto(1); -- Ver saldo'
+\echo '  CALL comprar_mais_carga_nave(1) -- Aumenta a carga total da sua nave'
 \echo ''
 \echo 'Comandos de Debug:'
 \echo '  CALL status_nave_minerios(1); -- Status da nave e minérios'
