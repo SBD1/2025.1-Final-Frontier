@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { currSector, moveToSector, findNearbySectors, pilotStatus, showGameMap } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
-import { minerar } from '../../../server/controllers/pilotControllers';
+import { escanear, minerar } from '../../../server/controllers/pilotControllers';
 
 const Game = () => {
     const [errMessage, setErrMessage] = useState('');
@@ -77,6 +77,9 @@ const Game = () => {
                 } else {
                     return 'Minerio não encontrado, tente usar o comando escanear para ver os minérios disponíveis no seu setor.'
                 }
+            case 'escanear':
+                escanear();
+                return '### ESCANEANDO SEU SETOR'
             default:
                 return 'Comando inexistente.';
         }
