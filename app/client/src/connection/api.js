@@ -92,4 +92,20 @@ export const findNearbySectors = async (id) => {
     }
 }
 
+export const minerar = async (nomeMinerio) => {
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await api.get(`/pilot/minerar/${nomeMinerio}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+        return response.data;
+    } catch(err) {
+        console.error('Erro ao coletar minerio: ', err);
+        throw err;
+    }
+}
+
 export default api;

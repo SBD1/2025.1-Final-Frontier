@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { currSector, moveToSector, findNearbySectors, pilotStatus } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
+import { minerar } from '../../../server/controllers/pilotControllers';
 
 const Game = () => {
     const [errMessage, setErrMessage] = useState('');
@@ -55,6 +56,14 @@ const Game = () => {
             case 'status':
                 getPilotStatus();
                 return '### SOLICITANDO STATUS DO PILOTO';
+            case 'minerar':
+                let minerio = input.split(' ');
+                if(minerio[1]){
+                    minerar(minerio[1]);
+                    return `Minerando ${direction[1]}.`;
+                } else {
+                    return 'Minerio não encontrado, tente usar o comando escanear para ver os minérios disponíveis no seu setor.'
+                }
             default:
                 return 'Comando inexistente.';
         }

@@ -70,6 +70,21 @@ exports.moveToSector = async (req, res) => {
     // }
 };
 
+exports.minerar = async (req, res) => {
+    const {minerio} = req.params.nomeMinerio
+    try {
+        if (minerio == 'Prismatina'){
+            await pool.query("CALL coletar_minerio($1, '1');", [req.user.id]);
+        } else if (minerio == 'Zetânio'){
+            await pool.query("CALL coletar_minerio($1, '2');", [req.user.id]);
+        } else if (minerio == 'Cronóbio'){
+            await pool.query("CALL coletar_minerio($1, '3');", [req.user.id]);
+        }
+    } catch(err) {
+        res.status(400).json({error: err.message});
+    }
+}
+
 // exports.deletById = async (req, res) => {
 //     const { id } = req.params;
 
