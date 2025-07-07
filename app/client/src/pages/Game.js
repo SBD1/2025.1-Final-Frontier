@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { moveToSector, pilotStatus, showGameMap, minerar, escanear, vender } from '../connection/api';
+import { moveToSector, pilotStatus, showGameMap, minerar, escanear, vender, saldo } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
 
@@ -67,6 +67,15 @@ const Game = () => {
         }
     }
 
+    const executeSaldo = async () =>{
+        try{
+            const response = await saldo();
+            setNotices(response);
+        } catch(err) {
+            setErrMessage(err.response.data.message);
+        }
+    }
+
     const makeSale = async () => {
         try {
             const response = await vender();
@@ -107,6 +116,9 @@ const Game = () => {
             case 'escanear':
                 executeScan();
                 return 'Escaneando setor atual.'
+            case 'saldo':
+                executeSaldo();
+                return 'Verificando seu saldo'
             case 'vender':
                 makeSale();
                 return 'Tentando realizar venda.'
