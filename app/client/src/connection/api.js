@@ -91,23 +91,6 @@ export const moveToSector = async (direction) => {
     }
 };
 
-export const findNearbySectors = async (id) => {
-    const token = localStorage.getItem('token');
-
-    try {
-        const response = await api.get(`/sector/nearby/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        });
-        // console.log(response.data.north);
-        return response.data;
-    } catch(err) {
-        console.error('Erro ao coletar setores: ', err);
-        throw err;
-    }
-}
-
 export const minerar = async (minerio) => {
     const token = localStorage.getItem('token');
 
@@ -128,7 +111,7 @@ export const escanear = async (id) => {
     const token = localStorage.getItem('token');
 
     try {
-        const response = await api.get(`/pilot/escanear/${id}`, {
+        const response = await api.get(`/pilot/escanear`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }

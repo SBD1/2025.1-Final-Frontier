@@ -1,11 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import { currSector, moveToSector, findNearbySectors, pilotStatus, showGameMap, minerar } from '../connection/api';
+import { currSector, moveToSector, findNearbySectors, pilotStatus, showGameMap, minerar, escanear } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
-<<<<<<< HEAD
-=======
-import { escanear, minerar } from '../../../server/controllers/pilotControllers';
->>>>>>> 0b558035becb992d85b5c7b2ed050efe9d353e01
 
 const Game = () => {
     const [errMessage, setErrMessage] = useState('');
@@ -57,10 +53,20 @@ const Game = () => {
             const response = await minerar({minerio});
             setNotices(response);
         } catch(err) {
+            console.log(err.message.data.message);
             setErrMessage(err.response.data.message);
         }
     }
     
+    const executeScan = async () =>{
+        try{
+            const response = await escanear();
+            setNotices(response);
+        } catch(err) {
+            setErrMessage(err.response.data.message);
+        }
+    }
+
     const handleCommands = (input) => {
         let command = input.split(' ')[0];
         switch (command){
@@ -85,13 +91,13 @@ const Game = () => {
                 let minerio = input.split(' ');
                 if(minerio[1]){
                     executeMining(minerio[1]);
-                    return `Minerando ${minerio[1]}.`;
+                    return `Tentando minerar ${minerio[1]}.`;
                 } else {
                     return 'Minério não encontrado. Minérios existentes são (prismatina, zetânio, cronóbio). Tente usar o comando escanear para ver os minérios disponíveis no seu setor.'
                 }
             case 'escanear':
-                escanear();
-                return '### ESCANEANDO SEU SETOR'
+                executeScan();
+                return 'Escaneando setor atual.'
             default:
                 return 'Comando inexistente.';
         }
@@ -105,15 +111,14 @@ const Game = () => {
         if(e.key === 'Enter'){
             e.preventDefault();
             const result = handleCommands(userInput);
-            console.log(notices);
+  
+            setMessages((prevMsgs) => [...prevMsgs, '>> '+userInput  ]);
 
             if(Array.isArray(result)){
-                setMessages((prevMsgs) => [...prevMsgs, '>> '+userInput  ]);
                 result.forEach(item => {
                     setMessages((prevMsgs) => [...prevMsgs, item]);
                 });
             } else {
-                setMessages((prevMsgs) => [...prevMsgs, '>> '+userInput  ]);
                 setMessages((prevMsgs) => [...prevMsgs, result]);
             }
 
@@ -122,10 +127,14 @@ const Game = () => {
     };
 
     useEffect(() => {
+        setMessages((prevMsgs) => [...prevMsgs, errMessage]);
+    }, [errMessage]); 
+
+    useEffect(() => {
         notices.forEach(item => {
             setMessages((prevMsgs) => [...prevMsgs, item]);
         });
-    }, [notices])
+    }, [notices]);  
 
     useEffect(() => {
         fetch('/' + contentFile)

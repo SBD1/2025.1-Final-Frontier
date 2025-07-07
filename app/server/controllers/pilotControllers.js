@@ -53,8 +53,6 @@ exports.minerar = async (req, res) => {
     const client = await pool.connect();
     const notices = [];
 
-    console.log(minerio);
-
     try {
         client.on('notice', (notice) => {
             notices.push(notice.message);
@@ -66,8 +64,10 @@ exports.minerar = async (req, res) => {
             await client.query("CALL coletar_minerio($1, '2');", [req.user.id]);
         } else if (minerio == 'cronóbio'){
             await client.query("CALL coletar_minerio($1, '3');", [req.user.id]);
+        } else {
+            throw new Error("Minério inexistente!");
         }
-        console.log(notices);
+        
         res.status(201).json(notices);
     } catch(err) {
         res.status(400).json({error: err.message});
