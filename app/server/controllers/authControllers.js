@@ -9,8 +9,8 @@ exports.register = async(req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         await pool.query(
-            "INSERT INTO piloto (email, senha) VALUES ($1, $2) RETURNING *",
-            [username, hashedPassword]
+            "INSERT INTO piloto (email, senha, setor) VALUES ($1, $2, $3) RETURNING *",
+            [username, hashedPassword, 1]
         );
         res.status(201).json({message:'Usuário cadastrado!'});
     } catch(err) {
