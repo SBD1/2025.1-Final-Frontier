@@ -9,6 +9,7 @@ router.put('/move', authMiddleware, moveToSector);
 router.get('/status', authMiddleware, status);
 router.put('/minerar', authMiddleware, minerar);
 router.get('/escanear', authMiddleware, escanear);
+router.get('/saldo', authMiddleware, saldo);
 // router.delete('/:id', authMiddleware, deletById);
 
 module.exports = router;

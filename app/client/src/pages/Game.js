@@ -67,6 +67,15 @@ const Game = () => {
         }
     }
 
+    const executeSaldo = async () =>{
+        try{
+            const response = await saldo();
+            setNotices(response);
+        } catch(err) {
+            setErrMessage(err.response.data.message);
+        }
+    }
+
     const handleCommands = (input) => {
         let command = input.split(' ')[0];
         switch (command){
@@ -98,6 +107,9 @@ const Game = () => {
             case 'escanear':
                 executeScan();
                 return 'Escaneando setor atual.'
+            case 'saldo':
+                executeSaldo
+                return 'Verificando seu saldo'
             default:
                 return 'Comando inexistente.';
         }

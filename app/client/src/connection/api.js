@@ -123,4 +123,20 @@ export const escanear = async (id) => {
     }
 }
 
+export const saldo = async (id) => {
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await api.get(`/pilot/saldo`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+        return response.data;
+    } catch(err) {
+        console.error('Erro ao verificar saldo: ', err);
+        throw err;
+    }
+}
+
 export default api;
