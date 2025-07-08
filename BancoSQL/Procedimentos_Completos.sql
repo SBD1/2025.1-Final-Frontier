@@ -608,7 +608,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION comprar_mais_carga_nave(piloto_id INTEGER)
+-- Função para comprar mais carga para a nave
+CREATE OR REPLACE PROCEDURE comprar_mais_carga_nave(piloto_id INTEGER)
 LANGUAGE plpgsql AS $$
 DECLARE
     id_nave_var INTEGER;
@@ -618,6 +619,7 @@ DECLARE
     nova_carga_maxima INTEGER;
     tipo_setor TEXT;
     nome_setor TEXT;
+    setor_piloto INTEGER;
 BEGIN
     -- Verificar se o piloto existe
     IF NOT EXISTS(SELECT 1 FROM Piloto WHERE id = piloto_id) THEN
