@@ -155,4 +155,20 @@ export const vender = async () => {
     }
 }
 
+export const upgrade = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await api.get(`/pilot/upgrade`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        })
+        return response.data;
+    } catch(err) {
+        console.error('Erro ao realizar upgrade de capacidade: ', err);
+        throw err;
+    }
+}
+
 export default api;

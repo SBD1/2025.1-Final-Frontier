@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { moveToSector, pilotStatus, showGameMap, minerar, escanear, vender, saldo } from '../connection/api';
+import { moveToSector, pilotStatus, showGameMap, minerar, escanear, vender, saldo, upgrade } from '../connection/api';
 import Typewriter from '../components/Typewriter';
 import './style.css';
 
@@ -85,6 +85,15 @@ const Game = () => {
         }
     }
 
+    const executeUppgrade = async () => {
+        try {
+            const response = await upgrade();
+            setNotices(response);
+        } catch(err) {
+            setErrMessage(err.response.data.message);
+        }
+    }
+
     const handleCommands = (input) => {
         let command = input.split(' ')[0];
         switch (command){
@@ -122,6 +131,9 @@ const Game = () => {
             case 'vender':
                 makeSale();
                 return 'Tentando realizar venda.'
+            case 'upgrade':
+                executeUppgrade();
+                return 'Fazendo upgrade na capacidade da sua nave...'
             default:
                 return 'Comando inexistente.';
         }
