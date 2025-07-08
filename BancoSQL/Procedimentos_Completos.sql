@@ -609,7 +609,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION comprar_mais_carga_nave(piloto_id INTEGER)
-LANGUAGE plpgsql AS $$
+RETURN VOID AS $$
 DECLARE
     id_nave_var INTEGER;
     dinheiro_atual NUMERIC;
@@ -666,7 +666,7 @@ BEGIN
     RAISE NOTICE '💸 Créditos gastos: %', custo_upgrade;
     RAISE NOTICE '📦 Novo limite de carga da nave: %', nova_carga_maxima;
 END;
-$$;
+$$ LANGUAGE plpgsql;
 
 
 

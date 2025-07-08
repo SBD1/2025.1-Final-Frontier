@@ -67,7 +67,6 @@ export const pilotStatus = async () => {
                 Authorization: `Bearer ${token}`,
             }
         });
-        console.log(response.data);
         return response.data;
     } catch (err) {
         console.error('Erro ao recuperar status: ', err);

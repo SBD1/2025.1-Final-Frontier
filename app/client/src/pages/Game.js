@@ -134,8 +134,18 @@ const Game = () => {
             case 'upgrade':
                 executeUppgrade();
                 return 'Fazendo upgrade na capacidade da sua nave...'
+            case 'ajuda':
+                return ['-- status: Mostra dados do piloto, setor atual e próximos.',
+                '-- mapa: Mostra o mapa da galáxia com seus setores e descrições.',
+                '-- escanear: Apresenta minérios do setor atual.',
+                '-- minerar: Tenta coletar minérios do setor atual. Opções são prismatina, zetânio e cronóbio.',
+                '-- nav: Permite viajar para setores próximos. Opções são norte, sul, leste e oeste.',
+                '-- vender: Permite vender minérios em uma estação.',
+                '-- saldo: Apresenta saldo do piloto.',
+                '-- upgrade: Aumentar a capacidade de carga da nave atual.',
+                '-- limpar: Limpa histório do terminal.']
             default:
-                return 'Comando inexistente.';
+                return `Comando inexistente. Use 'ajuda' para ver lista de comandos disponíveis. `;
         }
     };
 
