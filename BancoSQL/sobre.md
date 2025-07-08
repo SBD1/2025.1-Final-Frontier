@@ -17,7 +17,7 @@ Durante essa entrega, o foco principal foi:
 
 ---
 
-## 🎥 Vídeo da Apresentação
+## 🎥 Vídeo da Apresentação 2
 
 Clique na miniatura ou link abaixo para assistir à apresentação completa do grupo:
 
@@ -29,6 +29,17 @@ Clique na miniatura ou link abaixo para assistir à apresentação completa do g
 [![Assista ao vídeo](https://img.youtube.com/vi/5GxFpSBqeYE/0.jpg)](https://youtu.be/5GxFpSBqeYE?si=-7T0Z251zKWOr0kx)
 
 ---
+
+## 🎥 Vídeo da Apresentação 3
+
+Clique na miniatura ou link abaixo para assistir à apresentação completa do grupo:
+
+<a href="https://www.youtube.com/watch?v=OGJPL4pCatY" target="_blank" rel="noopener">
+  Link para assistir o vídeo
+</a>
+
+[![Assista ao vídeo](https://img.youtube.com/vi/OGJPL4pCatY/0.jpg)](https://www.youtube.com/watch?v=OGJPL4pCatY)
+
 
 ## ✅ Observações Finais
 
