@@ -29,6 +29,11 @@ Este projeto tem como objetivo o desenvolvimento de um jogo web voltado à maté
 - [DML](Entrega%202/DML.sql)
 - [DQL](Entrega%202/DQL.sql)
 
+### Módulo 3
+
+Para rodar o projeto basta acessar as pastas app/client e app/server, rodar os comandos `npm install` e em seguida `npm start` em cada uma delas. Realizar o registro e depois login.
+O vídeo da apresentação estará no Sobre.md.
+
 ## 🎥 Vídeos de Apresentação
 
 | Módulo | Link da Gravação           | Data       |
