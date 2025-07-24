@@ -40,3 +40,4 @@ O vídeo da apresentação estará no Sobre.md.
 |--------|-----------------------------|------------|
 | 1      | [Apresentação Módulo 1](Entrega%201/Video_Entrega_1.mp4)  | 02/05/2025 |
 | 2      | [Apresentação Módulo 2](Entrega%202/sobre.md)| 16/06/2025|
+| 3      | [Apresentação Módulo 3](Entrega%202/sobre.md)| 07/07/2025|
