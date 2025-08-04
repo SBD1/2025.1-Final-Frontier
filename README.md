@@ -39,5 +39,5 @@ O vídeo da apresentação estará no Sobre.md.
 | Módulo | Link da Gravação           | Data       | Link       |
 |--------|-----------------------------|------------|------------|
 | 1      | [Apresentação Módulo 1](Entrega%201/Video_Entrega_1.mp4)  | 02/05/2025 | [Apresentação 1](https://youtu.be/c3EJ8sLkJ7U) |
-| 2      | [Apresentação Módulo 2](BancoSQL/Entrega%202%20-%20Banco%20de%20dados%201.mp4)| 16/06/2025| 02/05/2025 | [Apresentação 2](https://www.youtube.com/watch?v=5GxFpSBqeYE) |
-| 3      | [Apresentação Módulo 3](BancoSQL/Entrega%203%20-%20Final%20Frontier.mp4)| 07/07/2025| 02/05/2025 | [Apresentação 3](https://www.youtube.com/watch?v=OGJPL4pCatY) |
+| 2      | [Apresentação Módulo 2](BancoSQL/Entrega%202%20-%20Banco%20de%20dados%201.mp4)| 16/06/2025| [Apresentação 2](https://www.youtube.com/watch?v=5GxFpSBqeYE) |
+| 3      | [Apresentação Módulo 3](BancoSQL/Entrega%203%20-%20Final%20Frontier.mp4)| 07/07/2025| [Apresentação 3](https://www.youtube.com/watch?v=OGJPL4pCatY) |
